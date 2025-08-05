@@ -9,17 +9,15 @@
   <title>Ragavan Elavarasan | Flutter Developer</title>
   <link rel="icon" href="mobile-development.png" type="image/png">
   <link rel="canonical" href="https://ragavdev.me/" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
-    
     * {
       margin: 0; padding: 0; box-sizing: border-box;
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: #f0f2f5;
       color: #333;
       line-height: 1.6;
@@ -43,16 +41,23 @@
       margin-top: 1rem;
       animation: fadeInUp 1s ease-in-out 2s both;
     }
+
+    /* Hamburger Menu */
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+    }
     nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
       background: #3b3f99;
       padding: 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      list-style: none;
     }
     nav a {
       color: white;
@@ -64,6 +69,28 @@
     nav a:hover {
       color: #ffcc00;
     }
+
+    /* Mobile Nav */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+        text-align: right;
+        padding: 1rem;
+        background: #3b3f99;
+      }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        background: #3b3f99;
+        padding-bottom: 1rem;
+      }
+      nav ul.show {
+        display: flex;
+      }
+    }
+
     section {
       padding: 2rem 1rem;
       max-width: 1000px;
@@ -138,44 +165,6 @@
       from { width: 0 }
       to { width: 100% }
     }
-
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      nav {
-        flex-direction: column;
-        align-items: center;
-      }
-      nav a {
-        font-size: 1rem;
-        padding: 0.3rem;
-      }
-      section h2 {
-        font-size: 1.5rem;
-      }
-      .project, .package {
-        padding: 1rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      header h1 {
-        font-size: 1.5rem;
-      }
-      header p {
-        font-size: 0.9rem;
-      }
-      nav a {
-        font-size: 0.9rem;
-      }
-      .project h3, .package h3 {
-        font-size: 1.1rem;
-      }
-      .project p, .package p {
-        font-size: 0.85rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -184,11 +173,16 @@
     <p>Flutter Developer | Dart Enthusiast | Open Source Contributor</p>
   </header>
 
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <i class="fas fa-bars"></i>
+  </div>
   <nav>
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#packages">Packages</a>
-    <a href="#contact">Contact</a>
+    <ul id="nav-list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#packages">Packages</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
   </nav>
 
   <section id="about">
@@ -208,14 +202,6 @@
     <div class="project">
       <h3>AR Tale Teller</h3>
       <p>An engaging AR storytelling app built in Unity for preschoolers with interactive characters.</p>
-    </div>
-    <div class="project">
-      <h3>TrackPilots</h3>
-      <p>Employee tracking dashboard using Flutter, Node.js, PostgreSQL, and GraphQL.</p>
-    </div>
-    <div class="project">
-      <h3>Dono Books</h3>
-      <p>Invoice management app built using Flutter and Firebase during internship at Coreverse.</p>
     </div>
   </section>
 
@@ -255,10 +241,15 @@
         }
       });
     }, { threshold: 0.1 });
-
     sections.forEach(section => {
       observer.observe(section);
     });
+
+    // Hamburger toggle
+    function toggleMenu() {
+      const navList = document.getElementById("nav-list");
+      navList.classList.toggle("show");
+    }
   </script>
 </body>
 </html>
