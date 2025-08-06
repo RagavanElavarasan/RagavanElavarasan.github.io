@@ -10,7 +10,8 @@
   <link rel="icon" href="mobile-development.png" type="image/png">
   <link rel="canonical" href="https://ragavdev.me/" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <style>
     * {
       margin: 0; padding: 0; box-sizing: border-box;
@@ -18,28 +19,49 @@
     }
     body {
       font-family: 'Inter', sans-serif;
-      background: #f0f2f5;
-      color: #333;
+      background: #0a192f; /* Dark blue background */
+      color: #ccd6f6; /* Light text */
       line-height: 1.6;
+      overflow-x: hidden;
     }
     header {
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      background: linear-gradient(135deg, #0a192f, #172a45);
       color: white;
       text-align: center;
       padding: 3rem 1rem;
-      animation: fadeIn 2s ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(64, 158, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 20%);
+      z-index: 0;
     }
     header h1 {
       font-size: 2.5rem;
-      animation: typewriter 2.5s steps(22) 1s 1 normal both;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 3px solid white;
+      position: relative;
+      z-index: 1;
+      font-family: 'Source Code Pro', monospace;
     }
     header p {
       font-size: 1rem;
       margin-top: 1rem;
-      animation: fadeInUp 1s ease-in-out 2s both;
+      position: relative;
+      z-index: 1;
+      color: #64ffda; /* Teal accent */
+    }
+    .tech-bubble {
+      position: absolute;
+      background: rgba(100, 255, 218, 0.1);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     /* Hamburger Menu */
@@ -48,10 +70,20 @@
       font-size: 1.5rem;
       color: white;
       cursor: pointer;
+      padding: 1rem;
+      background: #0a192f;
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 1000;
     }
     nav {
-      background: #3b3f99;
+      background: #0a192f;
       padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
     nav ul {
       display: flex;
@@ -60,116 +92,202 @@
       list-style: none;
     }
     nav a {
-      color: white;
+      color: #ccd6f6;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 500;
       font-size: 1rem;
       padding: 0.5rem;
+      position: relative;
+      transition: color 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #64ffda;
+      transition: width 0.3s;
     }
     nav a:hover {
-      color: #ffcc00;
+      color: #64ffda;
+    }
+    nav a:hover::after {
+      width: 100%;
     }
 
     /* Mobile Nav */
     @media (max-width: 768px) {
       .menu-toggle {
         display: block;
-        text-align: right;
-        padding: 1rem;
-        background: #3b3f99;
+      }
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 0;
       }
       nav ul {
         display: none;
         flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-        background: #3b3f99;
-        padding-bottom: 1rem;
+        gap: 0;
+        background: #112240;
+        padding: 1rem 0;
       }
       nav ul.show {
         display: flex;
       }
+      nav a {
+        display: block;
+        padding: 1rem;
+        text-align: center;
+      }
     }
+    
     section {
-      padding: 2rem 1rem;
+      padding: 4rem 1rem;
       max-width: 1000px;
       margin: auto;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
+      position: relative;
     }
     section h2 {
-      color: #4e54c8;
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
+      color: #64ffda;
+      margin-bottom: 2rem;
+      font-size: 2rem;
       text-align: center;
+      font-family: 'Source Code Pro', monospace;
+      position: relative;
+    }
+    section h2::after {
+      content: '';
+      display: block;
+      width: 70px;
+      height: 2px;
+      background: #64ffda;
+      margin: 0.5rem auto;
     }
     .project, .package {
-      background: white;
-      padding: 1rem;
+      background: #112240;
+      padding: 1.5rem;
       margin-bottom: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      border-radius: 5px;
+      border-left: 3px solid #64ffda;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
     .project:hover, .package:hover {
       transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
     .project h3, .package h3 {
       font-size: 1.3rem;
-      color: #333;
+      color: #ccd6f6;
       margin-bottom: 0.5rem;
+      font-family: 'Source Code Pro', monospace;
     }
     .project p, .package p {
       font-size: 0.95rem;
-      color: #555;
+      color: #8892b0;
+    }
+    .project a, .package a {
+      color: #64ffda;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .project a:hover, .package a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    .tech-tag {
+      display: inline-block;
+      background: rgba(100, 255, 218, 0.1);
+      color: #64ffda;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+      margin-right: 0.5rem;
     }
     .contact {
       text-align: center;
     }
     .contact a {
       display: inline-block;
-      margin: 0.5rem;
-      color: #4e54c8;
+      margin: 1rem;
+      color: #ccd6f6;
       text-decoration: none;
-      font-size: 1.6rem;
-      transition: transform 0.2s;
+      font-size: 2rem;
+      transition: transform 0.3s, color 0.3s;
+      position: relative;
     }
     .contact a:hover {
-      transform: scale(1.1);
-      color: #222;
+      transform: translateY(-5px);
+      color: #64ffda;
+    }
+    .contact a::after {
+      content: attr(title);
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: #64ffda;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .contact a:hover::after {
+      opacity: 1;
     }
     footer {
-      background: #4e54c8;
-      color: white;
+      background: #0a192f;
+      color: #8892b0;
       text-align: center;
-      padding: 1rem;
-      margin-top: 3rem;
+      padding: 2rem;
       font-size: 0.9rem;
+      border-top: 1px solid #233554;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+    footer p {
+      margin-bottom: 0.5rem;
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    
+    /* Code-like decorations */
+    .code-comment {
+      color: #5a6782;
+      font-style: italic;
+      font-family: 'Source Code Pro', monospace;
     }
-    @keyframes typewriter {
-      from { width: 0 }
-      to { width: 100% }
+    
+    /* Floating elements */
+    .floating-icon {
+      position: absolute;
+      opacity: 0.1;
+      z-index: -1;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      section {
+        padding: 2rem 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Ragavan Elavarasan</h1>
-    <p>Flutter Developer | Dart Enthusiast | Open Source Contributor</p>
+  <header id="hero">
+    <div class="tech-bubble" id="bubble1"></div>
+    <div class="tech-bubble" id="bubble2"></div>
+    <div class="tech-bubble" id="bubble3"></div>
+    <h1 id="main-title">Ragavan Elavarasan</h1>
+    <p id="subtitle">Flutter Developer | Dart Enthusiast | Open Source Contributor</p>
+    <i class="fab fa-dart floating-icon" style="top: 20%; left: 10%; font-size: 3rem;"></i>
+    <i class="fab fa-android floating-icon" style="top: 70%; left: 85%; font-size: 3rem;"></i>
+    <i class="fas fa-mobile-screen floating-icon" style="top: 30%; left: 80%; font-size: 3rem;"></i>
   </header>
 
   <div class="menu-toggle" onclick="toggleMenu()">
@@ -188,8 +306,16 @@
     <h2>About Me</h2>
     <p>
       I'm Ragavan, a passionate Flutter developer currently studying at K.S. Rangasamy College of Technology. 
-      I build scalable apps, contribute to open-source, and enjoy creating tools that matter. I’ve worked on multiple freelance and startup projects.
+      I build scalable apps, contribute to open-source, and enjoy creating tools that matter. I've worked on multiple freelance and startup projects.
     </p>
+    
+    <div style="margin-top: 2rem;">
+      <span class="tech-tag">Flutter</span>
+      <span class="tech-tag">Dart</span>
+      <span class="tech-tag">Firebase</span>
+      <span class="tech-tag">UI/UX</span>
+      <span class="tech-tag">API Integration</span>
+    </div>
   </section>
 
   <section id="projects">
@@ -197,59 +323,229 @@
     <div class="project">
       <h3>Copsify AI</h3>
       <p>An AI-powered chatbot system built with Flutter & Python Flask to help identify IPC sections and related info.</p>
+      <span class="tech-tag">Flutter</span>
+      <span class="tech-tag">Python</span>
+      <span class="tech-tag">NLP</span>
     </div>
     <div class="project">
       <h3>AR Tale Teller</h3>
       <p>An engaging AR storytelling app built in Unity for preschoolers with interactive characters.</p>
+      <span class="tech-tag">Unity</span>
+      <span class="tech-tag">C#</span>
+      <span class="tech-tag">ARCore</span>
     </div>
   </section>
-
 
   <section id="packages">
     <h2>Packages</h2>
     <div class="package">
       <h3><a href="https://pub.dev/packages/custom_date_picker_plus_pro" target="_blank">custom_date_picker_plus_pro</a></h3>
       <p>A highly customizable DateTime picker with dark mode, internationalization, and range support. Available on pub.dev.</p>
+      <span class="tech-tag">Dart</span>
+      <span class="tech-tag">Flutter</span>
+      <span class="tech-tag">UI Widgets</span>
     </div>
     <div class="package">
       <h3><a href="https://pub.dev/publishers/ragavdev.me" target="_blank">My Pub.dev Publisher</a></h3>
       <p>Check out more open-source packages including API handlers, UI widgets, and extensions.</p>
+      <span class="tech-tag">Open Source</span>
+      <span class="tech-tag">Dart Packages</span>
     </div>
   </section>
 
   <section id="contact">
     <h2>Contact</h2>
-    <p style="text-align: center;">Let’s collaborate! Reach out through any of these platforms:</p>
+    <p style="text-align: center; margin-bottom: 2rem;">Let's collaborate! Reach out through any of these platforms:</p>
     <div class="contact">
       <a href="mailto:eragavan573@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
       <a href="https://github.com/RagavanElavarasan" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
       <a href="https://www.linkedin.com/in/ragavan-elavarasan-42733b259" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://pub.dev/publishers/ragavdev.me" target="_blank" title="Pub.dev"><i class="fas fa-box-open"></i></a>
     </div>
   </section>
 
   <footer>
-    <p>&copy; 2025 Ragavan Elavarasan. All rights reserved.</p>
+    <p>&copy; <span id="current-year"></span> Ragavan Elavarasan. All rights reserved.</p>
+    <p>Built with <i class="fas fa-heart" style="color: #ff4757;"></i> and <i class="fas fa-code" style="color: #64ffda;"></i></p>
   </footer>
 
   <script>
-    // Scroll-triggered animations
-    const sections = document.querySelectorAll("section");
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
+    // Initialize anime.js animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set current year in footer
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // Hero section animations
+      anime({
+        targets: '#main-title',
+        opacity: [0, 1],
+        translateY: [-30, 0],
+        duration: 1500,
+        easing: 'easeOutExpo'
       });
-    }, { threshold: 0.1 });
-    sections.forEach(section => {
-      observer.observe(section);
+      
+      anime({
+        targets: '#subtitle',
+        opacity: [0, 1],
+        translateY: [30, 0],
+        delay: 800,
+        duration: 1200,
+        easing: 'easeOutExpo'
+      });
+      
+      // Floating tech bubbles in header
+      anime({
+        targets: '#bubble1',
+        translateX: [-100, anime.random(-50, 50)],
+        translateY: [-100, anime.random(-50, 50)],
+        scale: [0, anime.random(0.5, 2)],
+        opacity: [0, 0.1],
+        duration: 2000,
+        easing: 'easeInOutQuad',
+        delay: 500
+      });
+      
+      anime({
+        targets: '#bubble2',
+        translateX: [100, anime.random(-50, 50)],
+        translateY: [100, anime.random(-50, 50)],
+        scale: [0, anime.random(0.5, 2)],
+        opacity: [0, 0.1],
+        duration: 2000,
+        easing: 'easeInOutQuad',
+        delay: 1000
+      });
+      
+      anime({
+        targets: '#bubble3',
+        translateX: [0, anime.random(-50, 50)],
+        translateY: [0, anime.random(-50, 50)],
+        scale: [0, anime.random(0.5, 2)],
+        opacity: [0, 0.1],
+        duration: 2000,
+        easing: 'easeInOutQuad',
+        delay: 1500
+      });
+      
+      // Floating icons animation
+      anime({
+        targets: '.floating-icon',
+        translateY: [0, -15],
+        direction: 'alternate',
+        loop: true,
+        easing: 'easeInOutSine',
+        duration: 3000,
+        delay: anime.stagger(1000)
+      });
+      
+      // Section entrance animations
+      const sections = document.querySelectorAll('section');
+      sections.forEach((section, index) => {
+        anime({
+          targets: section,
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 800,
+          delay: 500 + (index * 200),
+          easing: 'easeOutExpo',
+          begin: function(anim) {
+            // Make section visible before animation starts
+            section.style.visibility = 'visible';
+          }
+        });
+      });
+      
+      // Project hover effects
+      const projects = document.querySelectorAll('.project, .package');
+      projects.forEach(project => {
+        project.addEventListener('mouseenter', () => {
+          anime({
+            targets: project,
+            scale: 1.02,
+            duration: 300,
+            easing: 'easeOutExpo'
+          });
+        });
+        
+        project.addEventListener('mouseleave', () => {
+          anime({
+            targets: project,
+            scale: 1,
+            duration: 300,
+            easing: 'easeOutExpo'
+          });
+        });
+      });
+      
+      // Contact icons animation
+      const contactIcons = document.querySelectorAll('.contact a');
+      contactIcons.forEach(icon => {
+        icon.addEventListener('mouseenter', () => {
+          anime({
+            targets: icon,
+            scale: 1.2,
+            duration: 300,
+            easing: 'easeOutExpo'
+          });
+        });
+        
+        icon.addEventListener('mouseleave', () => {
+          anime({
+            targets: icon,
+            scale: 1,
+            duration: 300,
+            easing: 'easeOutExpo'
+          });
+        });
+      });
     });
-
+    
     // Hamburger toggle
     function toggleMenu() {
-      const navList = document.getElementById("nav-list");
-      navList.classList.toggle("show");
+      const navList = document.getElementById('nav-list');
+      navList.classList.toggle('show');
+      
+      // Animate the menu icon
+      const icon = document.querySelector('.menu-toggle i');
+      if (navList.classList.contains('show')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+        anime({
+          targets: icon,
+          rotate: 180,
+          duration: 300
+        });
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+        anime({
+          targets: icon,
+          rotate: 0,
+          duration: 300
+        });
+      }
     }
+    
+    // Scroll to section with offset for fixed header
+    document.querySelectorAll('nav a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        const navHeight = document.querySelector('nav').offsetHeight;
+        
+        window.scrollTo({
+          top: targetElement.offsetTop - navHeight,
+          behavior: 'smooth'
+        });
+        
+        // Close mobile menu if open
+        if (window.innerWidth <= 768) {
+          toggleMenu();
+        }
+      });
+    });
   </script>
 </body>
 </html>
